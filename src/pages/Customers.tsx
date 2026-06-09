@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
-import { Plus, Search, Edit, Trash2, Phone, Mail, MapPin } from 'lucide-react';
+import { Plus, Search, Edit, Trash2, Phone, Mail, MapPin, Ruler, Sparkles, Crown, Star, Scissors } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
+import { StitchingLoader } from '@/components/animations/StitchingLoader';
+import { MeasuringTape } from '@/components/animations/MeasuringTape';
 import { useAppStore } from '@/store';
 import { Customer } from '@/types';
 
 export function Customers() {
   const [searchTerm, setSearchTerm] = useState('');
   const [showAddForm, setShowAddForm] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const customers = useAppStore((state) => state.customers);
   const addCustomer = useAppStore((state) => state.addCustomer);
   const deleteCustomer = useAppStore((state) => state.deleteCustomer);
@@ -20,6 +23,8 @@ export function Customers() {
 
   const handleAddCustomer = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setIsLoading(true);
+    
     const formData = new FormData(event.currentTarget);
     
     const newCustomer: Omit<Customer, 'id' | 'createdAt' | 'updatedAt'> = {
@@ -39,247 +44,327 @@ export function Customers() {
       },
     };
 
-    addCustomer(newCustomer);
-    setShowAddForm(false);
-    event.currentTarget.reset();
+    // Simulate API call with loading
+    setTimeout(() => {
+      addCustomer(newCustomer);
+      setShowAddForm(false);
+      setIsLoading(false);
+      event.currentTarget.reset();
+    }, 1500);
   };
 
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <StitchingLoader size="lg" text="Adding Customer to Atelier" />
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900">Customers</h2>
-          <p className="text-muted-foreground">Manage your customer database</p>
+    <div className="space-y-8">
+      {/* Luxury Header */}
+      <div className="luxury-card rounded-2xl p-6 fabric-texture relative overflow-hidden">
+        <div className="absolute top-0 right-0 opacity-10">
+          <Crown className="w-24 h-24 text-gold rotate-12" />
         </div>
-        <Button onClick={() => setShowAddForm(true)}>
-          <Plus className="w-4 h-4 mr-2" />
-          Add Customer
-        </Button>
+        <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h2 className="text-3xl font-display font-bold text-gold mb-2">Distinguished Clientele</h2>
+            <p className="text-silver">Crafting excellence for our valued customers</p>
+            <MeasuringTape length={60} showMeasurement measurement={`${customers.length} Elite Customers`} />
+          </div>
+          <Button variant="golden" onClick={() => setShowAddForm(true)} size="lg">
+            <Plus className="w-5 h-5 mr-2" />
+            Welcome New Client
+          </Button>
+        </div>
       </div>
 
-      {/* Search */}
-      <div className="relative max-w-md">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-        <input
-          type="text"
-          placeholder="Search customers..."
-          className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+      {/* Elegant Search */}
+      <div className="relative max-w-lg mx-auto">
+        <div className="luxury-card rounded-2xl p-1">
+          <div className="relative">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gold w-5 h-5" />
+            <input
+              type="text"
+              placeholder="Search distinguished clients..."
+              className="w-full pl-12 pr-4 py-4 bg-transparent text-gold placeholder-silver/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-gold/50 font-medium"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+              <Sparkles className="w-5 h-5 text-gold animate-pulse" />
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Add Customer Form */}
+      {/* Luxury Add Customer Form */}
       {showAddForm && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Add New Customer</CardTitle>
+        <Card className="animate-slide-down border-gold/30">
+          <CardHeader className="text-center">
+            <div className="w-16 h-16 bg-gold/20 rounded-full flex items-center justify-center mx-auto mb-4 animate-float">
+              <Crown className="w-8 h-8 text-gold" />
+            </div>
+            <CardTitle className="text-2xl">Welcome New Distinguished Client</CardTitle>
+            <p className="text-silver">Create a profile worthy of luxury craftsmanship</p>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleAddCustomer} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium mb-1">Name *</label>
-                  <input
-                    type="text"
-                    name="name"
-                    required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Phone *</label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Email</label>
-                  <input
-                    type="email"
-                    name="email"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Address</label>
-                  <input
-                    type="text"
-                    name="address"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <h4 className="text-lg font-medium mb-3">Measurements (inches)</h4>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <form onSubmit={handleAddCustomer} className="space-y-6">
+              {/* Personal Information */}
+              <div className="space-y-4">
+                <h4 className="text-lg font-display font-semibold text-gold flex items-center">
+                  <Star className="w-5 h-5 mr-2" />
+                  Personal Information
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium mb-1">Chest</label>
+                    <label className="block text-sm font-medium text-gold mb-2">Full Name *</label>
                     <input
-                      type="number"
-                      name="chest"
-                      step="0.1"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+                      type="text"
+                      name="name"
+                      required
+                      className="w-full px-4 py-3 bg-navy-light border border-gold/30 rounded-xl text-gold placeholder-silver/60 focus:ring-2 focus:ring-gold/50 focus:border-gold transition-all"
+                      placeholder="Enter distinguished name"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-1">Waist</label>
+                    <label className="block text-sm font-medium text-gold mb-2">Phone *</label>
                     <input
-                      type="number"
-                      name="waist"
-                      step="0.1"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+                      type="tel"
+                      name="phone"
+                      required
+                      className="w-full px-4 py-3 bg-navy-light border border-gold/30 rounded-xl text-gold placeholder-silver/60 focus:ring-2 focus:ring-gold/50 focus:border-gold transition-all"
+                      placeholder="+1 (555) 123-4567"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-1">Hips</label>
+                    <label className="block text-sm font-medium text-gold mb-2">Email</label>
                     <input
-                      type="number"
-                      name="hips"
-                      step="0.1"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+                      type="email"
+                      name="email"
+                      className="w-full px-4 py-3 bg-navy-light border border-gold/30 rounded-xl text-gold placeholder-silver/60 focus:ring-2 focus:ring-gold/50 focus:border-gold transition-all"
+                      placeholder="elite@example.com"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-1">Shoulder</label>
+                    <label className="block text-sm font-medium text-gold mb-2">Address</label>
                     <input
-                      type="number"
-                      name="shoulder"
-                      step="0.1"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Arm Length</label>
-                    <input
-                      type="number"
-                      name="armLength"
-                      step="0.1"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Leg Length</label>
-                    <input
-                      type="number"
-                      name="legLength"
-                      step="0.1"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Neck</label>
-                    <input
-                      type="number"
-                      name="neck"
-                      step="0.1"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+                      type="text"
+                      name="address"
+                      className="w-full px-4 py-3 bg-navy-light border border-gold/30 rounded-xl text-gold placeholder-silver/60 focus:ring-2 focus:ring-gold/50 focus:border-gold transition-all"
+                      placeholder="Luxury residence address"
                     />
                   </div>
                 </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium mb-1">Notes</label>
+              {/* Bespoke Measurements */}
+              <div className="space-y-4">
+                <h4 className="text-lg font-display font-semibold text-gold flex items-center">
+                  <Ruler className="w-5 h-5 mr-2" />
+                  Bespoke Measurements (inches)
+                </h4>
+                <div className="luxury-card p-4 rounded-xl">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {[
+                      { name: 'chest', label: 'Chest' },
+                      { name: 'waist', label: 'Waist' },
+                      { name: 'hips', label: 'Hips' },
+                      { name: 'shoulder', label: 'Shoulder' },
+                      { name: 'armLength', label: 'Arm Length' },
+                      { name: 'legLength', label: 'Leg Length' },
+                      { name: 'neck', label: 'Neck' },
+                    ].map((field, index) => (
+                      <div key={field.name} className="animate-slide-up" style={{ animationDelay: `${index * 0.1}s` }}>
+                        <label className="block text-sm font-medium text-silver mb-1">{field.label}</label>
+                        <div className="relative">
+                          <input
+                            type="number"
+                            name={field.name}
+                            step="0.1"
+                            className="w-full px-3 py-2 bg-navy border border-gold/20 rounded-lg text-gold placeholder-silver/40 focus:ring-1 focus:ring-gold/50 focus:border-gold transition-all text-center"
+                            placeholder="0.0"
+                          />
+                          <Scissors className="absolute right-2 top-1/2 transform -translate-y-1/2 w-3 h-3 text-gold/50" />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Special Notes */}
+              <div className="space-y-4">
+                <h4 className="text-lg font-display font-semibold text-gold flex items-center">
+                  <Sparkles className="w-5 h-5 mr-2" />
+                  Special Preferences
+                </h4>
                 <textarea
                   name="notes"
-                  rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
-                  placeholder="Additional notes about measurements or preferences..."
+                  rows={4}
+                  className="w-full px-4 py-3 bg-navy-light border border-gold/30 rounded-xl text-gold placeholder-silver/60 focus:ring-2 focus:ring-gold/50 focus:border-gold transition-all resize-none"
+                  placeholder="Special styling preferences, fabric choices, or unique requirements for this distinguished client..."
                 />
               </div>
 
-              <div className="flex justify-end space-x-3">
+              {/* Action Buttons */}
+              <div className="flex justify-end space-x-4 pt-6 border-t border-gold/20">
                 <Button
                   type="button"
                   variant="outline"
                   onClick={() => setShowAddForm(false)}
+                  size="lg"
                 >
                   Cancel
                 </Button>
-                <Button type="submit">Add Customer</Button>
+                <Button type="submit" variant="golden" size="lg">
+                  <Crown className="w-4 h-4 mr-2" />
+                  Welcome to Atelier
+                </Button>
               </div>
             </form>
           </CardContent>
         </Card>
       )}
 
-      {/* Customers Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Elite Customer Gallery */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {filteredCustomers.length === 0 ? (
-          <div className="col-span-full text-center py-12">
-            <div className="text-muted-foreground">
-              {searchTerm ? 'No customers found matching your search.' : 'No customers yet. Add your first customer to get started!'}
-            </div>
+          <div className="col-span-full">
+            <Card className="text-center py-16 border-2 border-dashed border-gold/30">
+              <CardContent>
+                <div className="relative">
+                  <Crown className="w-20 h-20 text-gold/30 mx-auto mb-6 animate-float" />
+                  <Sparkles className="absolute top-4 right-1/2 transform translate-x-8 w-6 h-6 text-gold animate-pulse" />
+                  <Sparkles className="absolute bottom-4 left-1/2 transform -translate-x-8 w-4 h-4 text-gold animate-pulse" />
+                </div>
+                <h3 className="font-display font-semibold text-gold text-xl mb-2">
+                  {searchTerm ? 'No Distinguished Clients Found' : 'Your Elite Clientele Awaits'}
+                </h3>
+                <p className="text-silver mb-6">
+                  {searchTerm 
+                    ? 'Refine your search to find the perfect client.' 
+                    : 'Begin building your luxury customer base with exceptional service.'
+                  }
+                </p>
+                {!searchTerm && (
+                  <Button variant="golden" onClick={() => setShowAddForm(true)}>
+                    <Plus className="w-4 h-4 mr-2" />
+                    Welcome First Client
+                  </Button>
+                )}
+              </CardContent>
+            </Card>
           </div>
         ) : (
-          filteredCustomers.map((customer) => (
-            <Card key={customer.id} className="hover:shadow-lg transition-shadow">
-              <CardContent className="p-6">
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <h3 className="font-semibold text-lg">{customer.name}</h3>
-                    <div className="space-y-1 mt-2">
-                      {customer.phone && (
-                        <div className="flex items-center text-sm text-muted-foreground">
-                          <Phone className="w-4 h-4 mr-2" />
-                          {customer.phone}
-                        </div>
-                      )}
-                      {customer.email && (
-                        <div className="flex items-center text-sm text-muted-foreground">
-                          <Mail className="w-4 h-4 mr-2" />
-                          {customer.email}
-                        </div>
-                      )}
-                      {customer.address && (
-                        <div className="flex items-center text-sm text-muted-foreground">
-                          <MapPin className="w-4 h-4 mr-2" />
-                          {customer.address}
-                        </div>
-                      )}
+          filteredCustomers.map((customer, index) => (
+            <Card 
+              key={customer.id} 
+              className="group cursor-pointer hover:scale-105 animate-slide-up border-gold/20" 
+              style={{ animationDelay: `${index * 0.1}s` }}
+            >
+              <CardContent className="p-0">
+                {/* Customer Header */}
+                <div className="relative p-6 bg-gradient-to-br from-gold/10 to-gold/5 rounded-t-xl">
+                  <div className="absolute top-3 right-3">
+                    <div className="flex space-x-1">
+                      <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-gold/20">
+                        <Edit className="w-3 h-3" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 hover:bg-red-500/20"
+                        onClick={() => deleteCustomer(customer.id)}
+                      >
+                        <Trash2 className="w-3 h-3 text-red-400" />
+                      </Button>
                     </div>
                   </div>
-                  <div className="flex space-x-2">
-                    <Button variant="ghost" size="icon">
-                      <Edit className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => deleteCustomer(customer.id)}
-                    >
-                      <Trash2 className="w-4 h-4 text-red-500" />
-                    </Button>
-                  </div>
-                </div>
 
-                <div className="border-t pt-4">
-                  <h4 className="text-sm font-medium mb-2">Key Measurements</h4>
-                  <div className="grid grid-cols-3 gap-2 text-xs">
-                    <div>
-                      <span className="text-muted-foreground">Chest:</span>
-                      <span className="ml-1">{customer.measurements.chest}"</span>
+                  <div className="flex items-center space-x-4">
+                    <div className="w-12 h-12 bg-gold rounded-full flex items-center justify-center shadow-golden">
+                      <span className="text-lg font-bold text-navy">
+                        {customer.name.charAt(0).toUpperCase()}
+                      </span>
                     </div>
                     <div>
-                      <span className="text-muted-foreground">Waist:</span>
-                      <span className="ml-1">{customer.measurements.waist}"</span>
-                    </div>
-                    <div>
-                      <span className="text-muted-foreground">Shoulder:</span>
-                      <span className="ml-1">{customer.measurements.shoulder}"</span>
+                      <h3 className="font-display font-bold text-gold text-lg group-hover:text-gold-light transition-colors">
+                        {customer.name}
+                      </h3>
+                      <div className="flex items-center">
+                        {[...Array(5)].map((_, i) => (
+                          <Star key={i} className="w-3 h-3 text-gold fill-current" />
+                        ))}
+                        <span className="ml-2 text-xs text-silver">Elite Client</span>
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="mt-4 pt-4 border-t">
-                  <Button className="w-full" size="sm">
-                    Create Order
+                {/* Contact Information */}
+                <div className="p-6 space-y-3">
+                  {customer.phone && (
+                    <div className="flex items-center text-sm text-silver group-hover:text-gold transition-colors">
+                      <div className="w-8 h-8 bg-gold/20 rounded-lg flex items-center justify-center mr-3">
+                        <Phone className="w-4 h-4 text-gold" />
+                      </div>
+                      {customer.phone}
+                    </div>
+                  )}
+                  {customer.email && (
+                    <div className="flex items-center text-sm text-silver group-hover:text-gold transition-colors">
+                      <div className="w-8 h-8 bg-gold/20 rounded-lg flex items-center justify-center mr-3">
+                        <Mail className="w-4 h-4 text-gold" />
+                      </div>
+                      {customer.email}
+                    </div>
+                  )}
+                  {customer.address && (
+                    <div className="flex items-center text-sm text-silver group-hover:text-gold transition-colors">
+                      <div className="w-8 h-8 bg-gold/20 rounded-lg flex items-center justify-center mr-3">
+                        <MapPin className="w-4 h-4 text-gold" />
+                      </div>
+                      <span className="truncate">{customer.address}</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Measurements Preview */}
+                <div className="p-6 pt-0">
+                  <div className="luxury-card p-4 rounded-xl">
+                    <h4 className="text-sm font-display font-semibold text-gold mb-3 flex items-center">
+                      <Ruler className="w-4 h-4 mr-2" />
+                      Bespoke Measurements
+                    </h4>
+                    <div className="grid grid-cols-3 gap-3 text-xs">
+                      <div className="text-center">
+                        <div className="text-silver/60">Chest</div>
+                        <div className="text-gold font-semibold">{customer.measurements.chest}"</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-silver/60">Waist</div>
+                        <div className="text-gold font-semibold">{customer.measurements.waist}"</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-silver/60">Shoulder</div>
+                        <div className="text-gold font-semibold">{customer.measurements.shoulder}"</div>
+                      </div>
+                    </div>
+                    
+                    <div className="mt-3">
+                      <MeasuringTape length={80} />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Action Footer */}
+                <div className="p-6 pt-0">
+                  <Button variant="golden" className="w-full group-hover:shadow-golden transition-all">
+                    <Scissors className="w-4 h-4 mr-2" />
+                    Create Masterpiece
                   </Button>
                 </div>
               </CardContent>
