@@ -62,39 +62,56 @@ export function Customers() {
   }
 
   return (
-    <div className="space-y-8">
-      {/* Luxury Header */}
-      <div className="luxury-card rounded-2xl p-6 fabric-texture relative overflow-hidden">
+    <div className="space-y-6 sm:space-y-8">
+      {/* Mobile-Optimized Luxury Header */}
+      <div className="luxury-card rounded-xl sm:rounded-2xl p-4 sm:p-6 fabric-texture relative overflow-hidden">
         <div className="absolute top-0 right-0 opacity-10">
-          <Crown className="w-24 h-24 text-gold rotate-12" />
+          <Crown className="w-16 h-16 sm:w-24 sm:h-24 text-gold rotate-12" />
         </div>
-        <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h2 className="text-3xl font-display font-bold text-gold mb-2">Distinguished Clientele</h2>
-            <p className="text-silver">Crafting excellence for our valued customers</p>
-            <MeasuringTape length={60} showMeasurement measurement={`${customers.length} Elite Customers`} />
+        <div className="relative flex flex-col gap-4">
+          <div className="text-center sm:text-left">
+            <h2 className="text-xl sm:text-3xl font-display font-bold text-gold mb-2">Distinguished Clientele</h2>
+            <p className="text-silver text-sm sm:text-base">Crafting excellence for our valued customers</p>
+            <div className="mt-3 sm:mt-4">
+              <MeasuringTape length={60} showMeasurement measurement={`${customers.length} Elite Customers`} />
+            </div>
           </div>
-          <Button variant="golden" onClick={() => setShowAddForm(true)} size="lg">
-            <Plus className="w-5 h-5 mr-2" />
-            Welcome New Client
-          </Button>
+          <div className="flex justify-center sm:justify-end">
+            <Button 
+              variant="golden" 
+              onClick={() => setShowAddForm(true)} 
+              size="default"
+              className="w-full sm:w-auto"
+            >
+              <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+              <span className="hidden xs:inline">Welcome New Client</span>
+              <span className="xs:hidden">Add Client</span>
+            </Button>
+          </div>
+        </div>
+        
+        {/* Mobile stitching indicator */}
+        <div className="mt-4 sm:hidden">
+          <div className="flex justify-center">
+            <StitchingLoader size="sm" text="" />
+          </div>
         </div>
       </div>
 
-      {/* Elegant Search */}
-      <div className="relative max-w-lg mx-auto">
-        <div className="luxury-card rounded-2xl p-1">
+      {/* Mobile-Optimized Elegant Search */}
+      <div className="relative max-w-full sm:max-w-lg mx-auto px-2 sm:px-0">
+        <div className="luxury-card rounded-xl sm:rounded-2xl p-1">
           <div className="relative">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gold w-5 h-5" />
+            <Search className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-gold w-4 h-4 sm:w-5 sm:h-5" />
             <input
               type="text"
-              placeholder="Search distinguished clients..."
-              className="w-full pl-12 pr-4 py-4 bg-transparent text-gold placeholder-silver/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-gold/50 font-medium"
+              placeholder="Search clients..."
+              className="w-full pl-10 sm:pl-12 pr-10 sm:pr-4 py-3 sm:py-4 bg-transparent text-gold placeholder-silver/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-gold/50 font-medium text-sm sm:text-base"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-              <Sparkles className="w-5 h-5 text-gold animate-pulse" />
+            <div className="absolute right-3 sm:right-4 top-1/2 transform -translate-y-1/2">
+              <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-gold animate-pulse" />
             </div>
           </div>
         </div>
@@ -229,8 +246,8 @@ export function Customers() {
         </Card>
       )}
 
-      {/* Elite Customer Gallery */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {/* Mobile-First Elite Customer Gallery */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
         {filteredCustomers.length === 0 ? (
           <div className="col-span-full">
             <Card className="text-center py-16 border-2 border-dashed border-gold/30">

@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { Layout } from './components/Layout';
 import { Dashboard } from './pages/Dashboard';
 import { Customers } from './pages/Customers';
+import { SplashScreen } from './components/SplashScreen';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('dashboard');
+  const [isLoading, setIsLoading] = useState(true);
 
   const renderPage = () => {
     switch (currentPage) {
@@ -44,6 +46,10 @@ function App() {
         return <Dashboard />;
     }
   };
+
+  if (isLoading) {
+    return <SplashScreen onComplete={() => setIsLoading(false)} />;
+  }
 
   return (
     <Layout currentPage={currentPage} onPageChange={setCurrentPage}>

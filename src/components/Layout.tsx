@@ -14,6 +14,7 @@ import {
 import { Button } from './ui/Button';
 import { cn } from '@/utils/cn';
 import { ScissorsTransition } from './animations/ScissorsTransition';
+import { StitchingLoader } from './animations/StitchingLoader';
 import { usePageTransition } from '@/hooks/usePageTransition';
 
 interface LayoutProps {
@@ -42,31 +43,33 @@ export function Layout({ children, currentPage, onPageChange }: LayoutProps) {
   };
 
   return (
-    <div className="flex h-screen bg-background">
+    <div className="flex h-screen bg-background overflow-hidden">
       {/* Scissors Transition */}
       <ScissorsTransition 
         isActive={isTransitioning} 
         onComplete={() => {}} 
       />
 
-      {/* Sidebar */}
+      {/* Mobile-First Sidebar */}
       <div className={cn(
-        "fixed inset-y-0 left-0 z-50 w-72 luxury-card shadow-luxury transform transition-all duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0",
+        "fixed inset-y-0 left-0 z-50 w-80 sm:w-72 lg:w-64 xl:w-72 luxury-card shadow-luxury transform transition-all duration-300 ease-in-out",
+        "lg:translate-x-0 lg:static lg:inset-0",
         sidebarOpen ? "translate-x-0" : "-translate-x-full"
       )}>
-        {/* Brand Header */}
-        <div className="relative h-20 px-6 border-b border-border/50 fabric-texture">
+        {/* Mobile-Optimized Brand Header */}
+        <div className="relative h-16 sm:h-20 px-4 sm:px-6 border-b border-border/50 fabric-texture">
           <div className="flex items-center justify-center h-full">
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2 sm:space-x-3">
               <div className="relative">
-                <Scissors className="w-10 h-10 text-gold animate-float" />
-                <div className="absolute -top-1 -right-1">
-                  <Sparkles className="w-4 h-4 text-gold animate-pulse" />
+                <Scissors className="w-8 sm:w-10 h-8 sm:h-10 text-gold animate-float" />
+                <div className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1">
+                  <Sparkles className="w-3 sm:w-4 h-3 sm:h-4 text-gold animate-pulse" />
                 </div>
               </div>
               <div>
-                <h1 className="text-2xl font-display font-bold text-gold">Darzee</h1>
-                <p className="text-xs text-silver">Luxury Tailoring</p>
+                <h1 className="text-xl sm:text-2xl font-display font-bold text-gold">Darzee</h1>
+                <p className="text-xs text-silver hidden sm:block">Luxury Tailoring</p>
+                <p className="text-xs text-silver sm:hidden">Luxury</p>
               </div>
             </div>
           </div>
@@ -84,9 +87,15 @@ export function Layout({ children, currentPage, onPageChange }: LayoutProps) {
           </svg>
         </div>
         
-        {/* Navigation */}
-        <nav className="mt-8 px-4">
-          <ul className="space-y-3">
+        {/* Mobile-Optimized Navigation */}
+        <nav className="mt-4 sm:mt-8 px-3 sm:px-4 flex-1 overflow-y-auto">
+          {isTransitioning && (
+            <div className="flex justify-center py-8">
+              <StitchingLoader size="md" text="Preparing..." />
+            </div>
+          )}
+          
+          <ul className="space-y-2 sm:space-y-3">
             {sidebarItems.map((item, index) => {
               const Icon = item.icon;
               const isActive = currentPage === item.id;
@@ -96,10 +105,10 @@ export function Layout({ children, currentPage, onPageChange }: LayoutProps) {
                     onClick={() => handlePageChange(item.id)}
                     disabled={isTransitioning}
                     className={cn(
-                      "group w-full flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-300 relative overflow-hidden",
+                      "group w-full flex items-center px-3 sm:px-4 py-2.5 sm:py-3 text-sm font-medium rounded-xl transition-all duration-300 relative overflow-hidden touch-manipulation",
                       isActive
                         ? "bg-gradient-to-r from-gold to-gold-dark text-navy shadow-golden"
-                        : "text-silver hover:text-gold hover:bg-navy-light/50"
+                        : "text-silver hover:text-gold hover:bg-navy-light/50 active:bg-navy-light/70"
                     )}
                   >
                     {/* Shimmer effect for active item */}
@@ -109,22 +118,22 @@ export function Layout({ children, currentPage, onPageChange }: LayoutProps) {
                     
                     <div className="relative flex items-center w-full">
                       <Icon className={cn(
-                        "w-5 h-5 mr-4 transition-transform duration-300",
+                        "w-5 h-5 mr-3 sm:mr-4 transition-transform duration-300 flex-shrink-0",
                         isActive ? "scale-110" : "group-hover:scale-110"
                       )} />
-                      <div className="flex-1 text-left">
-                        <div className="font-semibold">{item.label}</div>
-                        <div className="text-xs opacity-70">{item.description}</div>
+                      <div className="flex-1 text-left min-w-0">
+                        <div className="font-semibold truncate">{item.label}</div>
+                        <div className="text-xs opacity-70 truncate hidden sm:block">{item.description}</div>
                       </div>
                       
                       {/* Active indicator */}
                       {isActive && (
-                        <div className="w-2 h-8 bg-navy rounded-full animate-pulse"></div>
+                        <div className="w-1.5 sm:w-2 h-6 sm:h-8 bg-navy rounded-full animate-pulse flex-shrink-0"></div>
                       )}
                     </div>
                     
                     {/* Hover thread */}
-                    <div className="absolute bottom-0 left-4 right-4 h-0.5 bg-gold transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+                    <div className="absolute bottom-0 left-3 sm:left-4 right-3 sm:right-4 h-0.5 bg-gold transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
                   </button>
                 </li>
               );
@@ -163,44 +172,49 @@ export function Layout({ children, currentPage, onPageChange }: LayoutProps) {
 
       {/* Main content */}
       <div className="flex-1 flex flex-col overflow-hidden lg:ml-0">
-        {/* Header */}
+        {/* Mobile-Optimized Header */}
         <header className="luxury-card border-b border-border/50 backdrop-blur-md">
-          <div className="flex items-center justify-between px-6 py-4">
-            <div className="flex items-center">
+          <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4">
+            <div className="flex items-center flex-1 min-w-0">
               <Button
                 variant="ghost"
                 size="icon"
-                className="lg:hidden hover:bg-navy-light"
+                className="lg:hidden hover:bg-navy-light mr-2 sm:mr-4 flex-shrink-0"
                 onClick={() => setSidebarOpen(true)}
               >
-                <Menu className="w-6 h-6" />
+                <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
               </Button>
-              <div className="ml-4 lg:ml-0">
-                <h1 className="text-2xl font-display font-bold text-gold capitalize">
+              <div className="min-w-0 flex-1">
+                <h1 className="text-lg sm:text-2xl font-display font-bold text-gold capitalize truncate">
                   {currentPage === 'new-order' ? 'New Order' : currentPage}
                 </h1>
-                <div className="h-0.5 w-16 bg-gold mt-1 animate-measure-tape"></div>
+                <div className="h-0.5 w-12 sm:w-16 bg-gold mt-0.5 sm:mt-1 animate-measure-tape"></div>
+                {isTransitioning && (
+                  <div className="mt-2">
+                    <StitchingLoader size="sm" text="" />
+                  </div>
+                )}
               </div>
             </div>
             
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 sm:space-x-4 flex-shrink-0">
               <Button 
                 variant="ghost" 
                 size="icon"
-                className="relative hover:bg-navy-light group"
+                className="relative hover:bg-navy-light group w-8 h-8 sm:w-10 sm:h-10"
               >
-                <Bell className="w-5 h-5 group-hover:animate-pulse" />
-                <div className="absolute -top-1 -right-1 w-3 h-3 bg-gold rounded-full animate-pulse">
+                <Bell className="w-4 h-4 sm:w-5 sm:h-5 group-hover:animate-pulse" />
+                <div className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 w-2.5 h-2.5 sm:w-3 sm:h-3 bg-gold rounded-full animate-pulse">
                   <div className="w-full h-full bg-gold rounded-full animate-ping"></div>
                 </div>
               </Button>
               
               <div className="relative">
-                <div className="w-10 h-10 bg-gradient-to-br from-gold to-gold-dark rounded-full flex items-center justify-center shadow-golden">
-                  <span className="text-sm font-bold text-navy">A</span>
+                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-gold to-gold-dark rounded-full flex items-center justify-center shadow-golden">
+                  <span className="text-xs sm:text-sm font-bold text-navy">A</span>
                 </div>
-                <div className="absolute -bottom-1 -right-1">
-                  <div className="w-4 h-4 bg-green-500 rounded-full border-2 border-card animate-pulse"></div>
+                <div className="absolute -bottom-0.5 -right-0.5 sm:-bottom-1 sm:-right-1">
+                  <div className="w-3 h-3 sm:w-4 sm:h-4 bg-green-500 rounded-full border-2 border-card animate-pulse"></div>
                 </div>
               </div>
             </div>
@@ -219,13 +233,22 @@ export function Layout({ children, currentPage, onPageChange }: LayoutProps) {
           </svg>
         </header>
 
-        {/* Page content with transition */}
+        {/* Mobile-Optimized Page content with transition */}
         <main className={cn(
-          "flex-1 overflow-y-auto p-6 transition-all duration-500",
+          "flex-1 overflow-y-auto p-4 sm:p-6 transition-all duration-500 touch-pan-y",
           isTransitioning ? "opacity-50 scale-95" : "opacity-100 scale-100"
         )}>
-          <div className="animate-fade-in">
+          <div className="animate-fade-in max-w-7xl mx-auto">
             {children}
+          </div>
+          
+          {/* Mobile floating stitching indicator */}
+          <div className="fixed bottom-4 right-4 sm:hidden z-40">
+            {isTransitioning && (
+              <div className="luxury-card p-2 rounded-full">
+                <StitchingLoader size="sm" text="" />
+              </div>
+            )}
           </div>
         </main>
       </div>

@@ -124,33 +124,35 @@ export function Dashboard() {
   }
 
   return (
-    <div className="space-y-8">
-      {/* User Type Switcher */}
-      <div className="flex justify-center">
-        <div className="luxury-card p-2 rounded-2xl border border-gold/30">
-          <div className="flex space-x-2">
+    <div className="space-y-6 sm:space-y-8">
+      {/* Mobile-Optimized User Type Switcher */}
+      <div className="flex justify-center px-2">
+        <div className="luxury-card p-1.5 sm:p-2 rounded-xl sm:rounded-2xl border border-gold/30 w-full max-w-md sm:max-w-lg">
+          <div className="flex space-x-1 sm:space-x-2">
             <Button
               variant={userType === 'tailor' ? 'golden' : 'ghost'}
-              size="lg"
+              size="sm"
               onClick={() => handleUserTypeSwitch('tailor')}
-              className="relative"
+              className="relative flex-1 text-xs sm:text-sm px-2 sm:px-4 py-2 sm:py-3"
             >
-              <Scissors className="w-5 h-5 mr-2" />
-              Tailor Dashboard
+              <Scissors className="w-3 h-3 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
+              <span className="hidden xs:inline">Tailor Dashboard</span>
+              <span className="xs:hidden">Tailor</span>
               {userType === 'tailor' && (
-                <Crown className="w-4 h-4 ml-2 animate-float" />
+                <Crown className="w-3 h-3 sm:w-4 sm:h-4 ml-1 sm:ml-2 animate-float" />
               )}
             </Button>
             <Button
               variant={userType === 'customer' ? 'golden' : 'ghost'}
-              size="lg"
+              size="sm"
               onClick={() => handleUserTypeSwitch('customer')}
-              className="relative"
+              className="relative flex-1 text-xs sm:text-sm px-2 sm:px-4 py-2 sm:py-3"
             >
-              <User className="w-5 h-5 mr-2" />
-              Customer Portal
+              <User className="w-3 h-3 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
+              <span className="hidden xs:inline">Customer Portal</span>
+              <span className="xs:hidden">Customer</span>
               {userType === 'customer' && (
-                <Star className="w-4 h-4 ml-2 animate-float" />
+                <Star className="w-3 h-3 sm:w-4 sm:h-4 ml-1 sm:ml-2 animate-float" />
               )}
             </Button>
           </div>
@@ -160,26 +162,28 @@ export function Dashboard() {
       {userType === 'tailor' ? (
         // Tailor Dashboard
         <>
-          {/* Welcome Section */}
-          <div className="relative luxury-card rounded-2xl p-8 overflow-hidden fabric-texture">
+          {/* Mobile-Optimized Welcome Section */}
+          <div className="relative luxury-card rounded-xl sm:rounded-2xl p-4 sm:p-8 overflow-hidden fabric-texture">
             <div className="absolute top-0 right-0 opacity-10">
-              <Scissors className="w-32 h-32 text-gold rotate-12" />
+              <Scissors className="w-20 h-20 sm:w-32 sm:h-32 text-gold rotate-12" />
             </div>
             <div className="relative z-10">
-              <div className="flex items-center space-x-4 mb-4">
-                <div className="w-16 h-16 bg-gold rounded-full flex items-center justify-center animate-float">
-                  <Crown className="w-8 h-8 text-navy" />
+              <div className="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 mb-4">
+                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gold rounded-full flex items-center justify-center animate-float mx-auto sm:mx-0">
+                  <Crown className="w-6 h-6 sm:w-8 sm:h-8 text-navy" />
                 </div>
-                <div>
-                  <h2 className="text-3xl font-display font-bold text-gold mb-2">
+                <div className="text-center sm:text-left">
+                  <h2 className="text-xl sm:text-3xl font-display font-bold text-gold mb-1 sm:mb-2">
                     Master Tailor's Atelier
                   </h2>
-                  <p className="text-silver">
+                  <p className="text-silver text-sm sm:text-base">
                     Crafting excellence, stitch by stitch
                   </p>
                 </div>
               </div>
-              <MeasuringTape length={75} showMeasurement measurement="Excellence Level: 98%" />
+              <div className="mt-4">
+                <MeasuringTape length={75} showMeasurement measurement="Excellence Level: 98%" />
+              </div>
             </div>
             
             {/* Decorative stitching */}
@@ -195,8 +199,8 @@ export function Dashboard() {
             </svg>
           </div>
 
-          {/* Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Mobile-First Stats Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {tailorStats.map((stat, index) => {
               const Icon = stat.icon;
               return (
@@ -205,31 +209,38 @@ export function Dashboard() {
                   className="group cursor-pointer"
                   style={{ animationDelay: stat.delay }}
                 >
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex-1">
-                        <p className="text-sm font-medium text-silver/80 mb-1">
+                  <CardContent className="p-4 sm:p-6">
+                    <div className="flex items-center justify-between mb-3 sm:mb-4">
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs sm:text-sm font-medium text-silver/80 mb-1 truncate">
                           {stat.title}
                         </p>
-                        <p className="text-2xl font-display font-bold text-gold">
+                        <p className="text-lg sm:text-2xl font-display font-bold text-gold truncate">
                           {stat.value}
                         </p>
-                        <div className="flex items-center mt-2">
-                          <TrendingUp className="w-3 h-3 text-emerald-400 mr-1" />
+                        <div className="flex items-center mt-1 sm:mt-2">
+                          <TrendingUp className="w-3 h-3 text-emerald-400 mr-1 flex-shrink-0" />
                           <span className="text-xs text-emerald-400">{stat.change}</span>
                         </div>
                       </div>
-                      <div className={`p-4 rounded-xl bg-gradient-to-br ${stat.gradient} shadow-luxury group-hover:scale-110 transition-transform duration-300`}>
-                        <Icon className="w-6 h-6 text-white" />
+                      <div className={`p-2 sm:p-4 rounded-lg sm:rounded-xl bg-gradient-to-br ${stat.gradient} shadow-luxury group-hover:scale-110 transition-transform duration-300 flex-shrink-0`}>
+                        <Icon className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
                       </div>
                     </div>
                     
                     {/* Progress bar */}
-                    <div className="w-full bg-navy-light rounded-full h-2 overflow-hidden">
+                    <div className="w-full bg-navy-light rounded-full h-1.5 sm:h-2 overflow-hidden">
                       <div 
                         className={`h-full bg-gradient-to-r ${stat.gradient} rounded-full animate-measure-tape`}
                         style={{ width: '70%' }}
                       ></div>
+                    </div>
+                    
+                    {/* Mobile stitching loader indicator */}
+                    <div className="mt-3 sm:hidden">
+                      <div className="flex justify-center">
+                        <div className="w-8 h-0.5 bg-gold/30 rounded-full animate-pulse"></div>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
