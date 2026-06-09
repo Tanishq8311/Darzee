@@ -1,0 +1,25 @@
+{
+  "name": "Darzee - Tailor Management",
+  "short_name": "Darzee",
+  "description": "Professional tailor management app for luxury fashion ateliers",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#eab308",
+  "orientation": "portrait-primary",
+  "categories": ["business", "productivity", "lifestyle"],
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512", 
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
