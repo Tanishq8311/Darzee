@@ -10,4 +10,11 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  build: {
+    outDir: 'dist',
+  },
+  server: {
+    host: '0.0.0.0', // Allow external connections
+    port: 5173,
+  },
 })
