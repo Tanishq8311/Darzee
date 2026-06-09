@@ -25,13 +25,6 @@ export function Dashboard() {
   const { user } = useAuthStore();
   const { getDashboardStats, getOrdersByTailor, getOrdersByCustomer } = useAppStore();
   
-  console.log('Dashboard rendering with user:', user);
-  
-  if (!user) {
-    console.log('Dashboard: No user, returning null');
-    return null;
-  }
-
   const userOrders = user.role === UserRole.TAILOR 
     ? getOrdersByTailor(user.id)
     : getOrdersByCustomer(user.id);
@@ -44,16 +37,16 @@ export function Dashboard() {
 
   const tailorStats = [
     {
-      title: 'Total Customers',
-      value: stats.totalCustomers,
-      icon: Users,
-      gradient: 'from-purple-500 to-purple-700',
-      change: '+5%',
+      title: 'Total Orders',
+      value: stats.totalOrders,
+      icon: Package,
+      gradient: 'from-blue-500 to-blue-700',
+      change: '+12%',
       delay: '0s',
     },
     {
-      title: 'Active Orders',
-      value: stats.activeOrders,
+      title: 'Pending Orders',
+      value: stats.pendingOrders,
       icon: Clock,
       gradient: 'from-orange-500 to-orange-700',
       change: '+8%',
@@ -68,30 +61,32 @@ export function Dashboard() {
       delay: '0.2s',
     },
     {
+      title: 'Total Customers',
+      value: stats.totalCustomers,
+      icon: Users,
+      gradient: 'from-purple-500 to-purple-700',
+      change: '+5%',
+      delay: '0.3s',
+    },
+    {
       title: 'Total Revenue',
       value: `₹${stats.totalRevenue.toLocaleString()}`,
       icon: DollarSign,
       gradient: 'from-gold to-gold-dark',
       change: '+23%',
-      delay: '0.3s',
-    },
-    {
-      title: 'Pending Payments',
-      value: `₹${stats.pendingPayments.toLocaleString()}`,
-      icon: TrendingUp,
-      gradient: 'from-indigo-500 to-indigo-700',
-      change: '+18%',
       delay: '0.4s',
     },
     {
-      title: 'Monthly Orders',
-      value: stats.monthlyOrders,
-      icon: Package,
-      gradient: 'from-blue-500 to-blue-700',
-      change: '+12%',
+      title: 'Monthly Revenue',
+      value: `₹${stats.monthlyRevenue.toLocaleString()}`,
+      icon: TrendingUp,
+      gradient: 'from-indigo-500 to-indigo-700',
+      change: '+18%',
       delay: '0.5s',
     },
   ];
+
+  if (!user) return null;
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -122,17 +117,8 @@ export function Dashboard() {
     );
   }
 
-  console.log('Dashboard about to render with stats:', stats);
-  
-  // Temporary simple test render
   return (
-    <div className="p-8" style={{ minHeight: '100vh', backgroundColor: 'lightblue', color: 'black' }}>
-      <h1 className="text-4xl font-bold mb-4">Dashboard Test</h1>
-      <p>User: {user.name}</p>
-      <p>Role: {user.role}</p>
-      <p>Email: {user.email}</p>
-      <p>Stats: {JSON.stringify(stats)}</p>
-      <div>Original content below:</div>
+    <div className="space-y-6">
       {user.role === UserRole.TAILOR ? (
         // Tailor Dashboard
         <>
@@ -249,7 +235,7 @@ export function Dashboard() {
             </Card>
           </div>
         </div>
-      ) : null}
+      )}
 
       {/* Recent Orders & Quick Actions */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

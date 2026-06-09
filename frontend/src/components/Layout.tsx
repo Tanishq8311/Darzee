@@ -15,7 +15,7 @@ import {
 import { Button } from './ui/Button';
 import { cn } from '@/utils/cn';
 import { ScissorsTransition } from './animations/ScissorsTransition';
-import { SimpleLoader } from './animations/SimpleLoader';
+import { MiniTailoringLoader } from './animations/TailoringLoader';
 import { usePageTransition } from '@/hooks/usePageTransition';
 import { useAuthStore } from '@/store/auth';
 import { User as UserType, UserRole } from '@/types';
@@ -47,8 +47,6 @@ export function Layout({ children, currentPage, onPageChange, user }: LayoutProp
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
   const { isTransitioning, transitionToPage } = usePageTransition();
   const { logout } = useAuthStore();
-  
-  console.log('Layout rendering with:', { currentPage, user: user?.email, hasChildren: !!children });
   
   const sidebarItems = user?.role === UserRole.TAILOR ? tailorSidebarItems : customerSidebarItems;
 
@@ -226,8 +224,9 @@ export function Layout({ children, currentPage, onPageChange, user }: LayoutProp
                 {currentPage === 'new-order' ? 'New Order' : currentPage}
               </h1>
               {isTransitioning && (
-                <div className="mt-2">
-                  <SimpleLoader size="sm" text="Loading..." />
+                <div className="mt-2 flex items-center space-x-2">
+                  <MiniTailoringLoader className="w-4 h-4" />
+                  <span className="text-sm text-muted-foreground">Loading...</span>
                 </div>
               )}
             </div>
