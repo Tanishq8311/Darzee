@@ -8,13 +8,12 @@ import {
   PlusCircle,
   Menu,
   Bell,
-  Sparkles,
-  Crown
+  X
 } from 'lucide-react';
 import { Button } from './ui/Button';
 import { cn } from '@/utils/cn';
 import { ScissorsTransition } from './animations/ScissorsTransition';
-import { StitchingLoader } from './animations/StitchingLoader';
+import { SimpleLoader } from './animations/SimpleLoader';
 import { usePageTransition } from '@/hooks/usePageTransition';
 
 interface LayoutProps {
@@ -24,11 +23,11 @@ interface LayoutProps {
 }
 
 const sidebarItems = [
-  { id: 'dashboard', label: 'Dashboard', icon: Home, description: 'Business overview' },
-  { id: 'customers', label: 'Customers', icon: Users, description: 'Client management' },
-  { id: 'orders', label: 'Orders', icon: Package, description: 'Active projects' },
-  { id: 'designs', label: 'Designs', icon: Scissors, description: 'Pattern catalog' },
-  { id: 'settings', label: 'Settings', icon: Settings, description: 'Preferences' },
+  { id: 'dashboard', label: 'Dashboard', icon: Home },
+  { id: 'customers', label: 'Customers', icon: Users },
+  { id: 'orders', label: 'Orders', icon: Package },
+  { id: 'designs', label: 'Designs', icon: Scissors },
+  { id: 'settings', label: 'Settings', icon: Settings },
 ];
 
 export function Layout({ children, currentPage, onPageChange }: LayoutProps) {
@@ -43,97 +42,107 @@ export function Layout({ children, currentPage, onPageChange }: LayoutProps) {
   };
 
   return (
-    <div className="flex h-screen bg-background overflow-hidden">
+    <div className="min-h-screen bg-background">
       {/* Scissors Transition */}
       <ScissorsTransition 
         isActive={isTransitioning} 
         onComplete={() => {}} 
       />
 
-      {/* Mobile-First Sidebar */}
-      <div className={cn(
-        "fixed inset-y-0 left-0 z-50 w-80 sm:w-72 lg:w-64 xl:w-72 luxury-card shadow-luxury transform transition-all duration-300 ease-in-out",
-        "lg:translate-x-0 lg:static lg:inset-0",
-        sidebarOpen ? "translate-x-0" : "-translate-x-full"
-      )}>
-        {/* Mobile-Optimized Brand Header */}
-        <div className="relative h-16 sm:h-20 px-4 sm:px-6 border-b border-border/50 fabric-texture">
-          <div className="flex items-center justify-center h-full">
-            <div className="flex items-center space-x-2 sm:space-x-3">
-              <div className="relative">
-                <Scissors className="w-8 sm:w-10 h-8 sm:h-10 text-gold animate-float" />
-                <div className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1">
-                  <Sparkles className="w-3 sm:w-4 h-3 sm:h-4 text-gold animate-pulse" />
-                </div>
-              </div>
-              <div>
-                <h1 className="text-xl sm:text-2xl font-display font-bold text-gold">Darzee</h1>
-                <p className="text-xs text-silver hidden sm:block">Luxury Tailoring</p>
-                <p className="text-xs text-silver sm:hidden">Luxury</p>
-              </div>
+      {/* Mobile Header */}
+      <header className="lg:hidden sticky top-0 z-40 bg-card/95 backdrop-blur-sm border-b border-border">
+        <div className="flex items-center justify-between px-4 py-3">
+          <div className="flex items-center space-x-3">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setSidebarOpen(true)}
+              className="w-9 h-9"
+            >
+              <Menu className="w-5 h-5" />
+            </Button>
+            <div className="flex items-center space-x-2">
+              <Scissors className="w-6 h-6 text-gold" />
+              <h1 className="text-lg font-display font-bold text-gold">Darzee</h1>
             </div>
           </div>
           
-          {/* Decorative stitching */}
-          <svg className="absolute bottom-0 left-0 right-0" height="4">
-            <line 
-              x1="0" 
-              y1="2" 
-              x2="100%" 
-              y2="2" 
-              className="stitching-line"
-              strokeWidth="1"
-            />
-          </svg>
+          <div className="flex items-center space-x-2">
+            <Button variant="ghost" size="icon" className="w-9 h-9 relative">
+              <Bell className="w-4 h-4" />
+              <div className="absolute -top-1 -right-1 w-2 h-2 bg-gold rounded-full"></div>
+            </Button>
+            <div className="w-8 h-8 bg-gold rounded-full flex items-center justify-center">
+              <span className="text-xs font-bold text-navy">T</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Desktop Sidebar */}
+      <aside className={cn(
+        "fixed inset-y-0 left-0 z-50 w-72 bg-card border-r border-border transform transition-transform duration-300 lg:translate-x-0",
+        sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+      )}>
+        {/* Desktop Brand Header */}
+        <div className="hidden lg:flex items-center justify-between p-6 border-b border-border">
+          <div className="flex items-center space-x-3">
+            <Scissors className="w-8 h-8 text-gold" />
+            <div>
+              <h1 className="text-xl font-display font-bold text-gold">Darzee</h1>
+              <p className="text-xs text-muted-foreground">Luxury Tailoring</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Header in Sidebar */}
+        <div className="lg:hidden flex items-center justify-between p-4 border-b border-border">
+          <div className="flex items-center space-x-3">
+            <Scissors className="w-8 h-8 text-gold" />
+            <div>
+              <h1 className="text-xl font-display font-bold text-gold">Darzee</h1>
+              <p className="text-xs text-muted-foreground">Luxury Tailoring</p>
+            </div>
+          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setSidebarOpen(false)}
+            className="w-9 h-9"
+          >
+            <X className="w-5 h-5" />
+          </Button>
         </div>
         
-        {/* Mobile-Optimized Navigation */}
-        <nav className="mt-4 sm:mt-8 px-3 sm:px-4 flex-1 overflow-y-auto">
+        {/* Navigation */}
+        <nav className="p-4">
           {isTransitioning && (
-            <div className="flex justify-center py-8">
-              <StitchingLoader size="md" text="Preparing..." />
+            <div className="flex justify-center py-4 mb-4">
+              <SimpleLoader size="md" text="Loading..." />
             </div>
           )}
           
-          <ul className="space-y-2 sm:space-y-3">
-            {sidebarItems.map((item, index) => {
+          <ul className="space-y-2">
+            {sidebarItems.map((item) => {
               const Icon = item.icon;
               const isActive = currentPage === item.id;
               return (
-                <li key={item.id} style={{ animationDelay: `${index * 0.1}s` }} className="animate-slide-down">
+                <li key={item.id}>
                   <button
                     onClick={() => handlePageChange(item.id)}
                     disabled={isTransitioning}
                     className={cn(
-                      "group w-full flex items-center px-3 sm:px-4 py-2.5 sm:py-3 text-sm font-medium rounded-xl transition-all duration-300 relative overflow-hidden touch-manipulation",
+                      "w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200",
                       isActive
-                        ? "bg-gradient-to-r from-gold to-gold-dark text-navy shadow-golden"
-                        : "text-silver hover:text-gold hover:bg-navy-light/50 active:bg-navy-light/70"
+                        ? "bg-gold text-navy shadow-sm"
+                        : "text-foreground hover:bg-accent hover:text-accent-foreground"
                     )}
                   >
-                    {/* Shimmer effect for active item */}
+                    <Icon className="w-5 h-5 mr-3 flex-shrink-0" />
+                    <span className="truncate">{item.label}</span>
                     {isActive && (
-                      <div className="absolute inset-0 bg-gold-shimmer opacity-20 animate-shimmer"></div>
+                      <div className="w-2 h-2 bg-navy rounded-full ml-auto flex-shrink-0"></div>
                     )}
-                    
-                    <div className="relative flex items-center w-full">
-                      <Icon className={cn(
-                        "w-5 h-5 mr-3 sm:mr-4 transition-transform duration-300 flex-shrink-0",
-                        isActive ? "scale-110" : "group-hover:scale-110"
-                      )} />
-                      <div className="flex-1 text-left min-w-0">
-                        <div className="font-semibold truncate">{item.label}</div>
-                        <div className="text-xs opacity-70 truncate hidden sm:block">{item.description}</div>
-                      </div>
-                      
-                      {/* Active indicator */}
-                      {isActive && (
-                        <div className="w-1.5 sm:w-2 h-6 sm:h-8 bg-navy rounded-full animate-pulse flex-shrink-0"></div>
-                      )}
-                    </div>
-                    
-                    {/* Hover thread */}
-                    <div className="absolute bottom-0 left-3 sm:left-4 right-3 sm:right-4 h-0.5 bg-gold transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
                   </button>
                 </li>
               );
@@ -141,18 +150,10 @@ export function Layout({ children, currentPage, onPageChange }: LayoutProps) {
           </ul>
         </nav>
         
-        {/* Premium CTA */}
+        {/* Add Order Button */}
         <div className="absolute bottom-6 left-4 right-4">
-          <div className="luxury-card p-4 border border-gold/20">
-            <div className="text-center space-y-2">
-              <Crown className="w-8 h-8 text-gold mx-auto animate-float" />
-              <h3 className="font-display font-semibold text-gold">Premium Features</h3>
-              <p className="text-xs text-silver">Upgrade for advanced tools</p>
-            </div>
-          </div>
-          
           <Button
-            className="w-full mt-4 shimmer-button"
+            className="w-full"
             onClick={() => handlePageChange('new-order')}
             disabled={isTransitioning}
           >
@@ -160,98 +161,54 @@ export function Layout({ children, currentPage, onPageChange }: LayoutProps) {
             New Order
           </Button>
         </div>
-      </div>
+      </aside>
 
-      {/* Mobile sidebar overlay */}
+      {/* Mobile Overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden animate-fade-in"
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
-      {/* Main content */}
-      <div className="flex-1 flex flex-col overflow-hidden lg:ml-0">
-        {/* Mobile-Optimized Header */}
-        <header className="luxury-card border-b border-border/50 backdrop-blur-md">
-          <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4">
-            <div className="flex items-center flex-1 min-w-0">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="lg:hidden hover:bg-navy-light mr-2 sm:mr-4 flex-shrink-0"
-                onClick={() => setSidebarOpen(true)}
-              >
-                <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
-              </Button>
-              <div className="min-w-0 flex-1">
-                <h1 className="text-lg sm:text-2xl font-display font-bold text-gold capitalize truncate">
-                  {currentPage === 'new-order' ? 'New Order' : currentPage}
-                </h1>
-                <div className="h-0.5 w-12 sm:w-16 bg-gold mt-0.5 sm:mt-1 animate-measure-tape"></div>
-                {isTransitioning && (
-                  <div className="mt-2">
-                    <StitchingLoader size="sm" text="" />
-                  </div>
-                )}
-              </div>
+      {/* Main Content */}
+      <main className="lg:ml-72">
+        {/* Desktop Header */}
+        <header className="hidden lg:flex sticky top-0 z-30 bg-background/95 backdrop-blur-sm border-b border-border">
+          <div className="flex items-center justify-between w-full px-6 py-4">
+            <div>
+              <h1 className="text-2xl font-display font-bold text-gold capitalize">
+                {currentPage === 'new-order' ? 'New Order' : currentPage}
+              </h1>
+              {isTransitioning && (
+                <div className="mt-2">
+                  <SimpleLoader size="sm" text="Loading..." />
+                </div>
+              )}
             </div>
             
-            <div className="flex items-center space-x-2 sm:space-x-4 flex-shrink-0">
-              <Button 
-                variant="ghost" 
-                size="icon"
-                className="relative hover:bg-navy-light group w-8 h-8 sm:w-10 sm:h-10"
-              >
-                <Bell className="w-4 h-4 sm:w-5 sm:h-5 group-hover:animate-pulse" />
-                <div className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 w-2.5 h-2.5 sm:w-3 sm:h-3 bg-gold rounded-full animate-pulse">
-                  <div className="w-full h-full bg-gold rounded-full animate-ping"></div>
-                </div>
+            <div className="flex items-center space-x-4">
+              <Button variant="ghost" size="icon" className="relative">
+                <Bell className="w-5 h-5" />
+                <div className="absolute -top-1 -right-1 w-2 h-2 bg-gold rounded-full"></div>
               </Button>
-              
-              <div className="relative">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-gold to-gold-dark rounded-full flex items-center justify-center shadow-golden">
-                  <span className="text-xs sm:text-sm font-bold text-navy">A</span>
-                </div>
-                <div className="absolute -bottom-0.5 -right-0.5 sm:-bottom-1 sm:-right-1">
-                  <div className="w-3 h-3 sm:w-4 sm:h-4 bg-green-500 rounded-full border-2 border-card animate-pulse"></div>
-                </div>
+              <div className="w-10 h-10 bg-gold rounded-full flex items-center justify-center">
+                <span className="text-sm font-bold text-navy">T</span>
               </div>
             </div>
           </div>
-          
-          {/* Header decoration */}
-          <svg className="w-full" height="2">
-            <line 
-              x1="0" 
-              y1="1" 
-              x2="100%" 
-              y2="1" 
-              className="stitching-line"
-              strokeWidth="0.5"
-            />
-          </svg>
         </header>
 
-        {/* Mobile-Optimized Page content with transition */}
-        <main className={cn(
-          "flex-1 overflow-y-auto p-4 sm:p-6 transition-all duration-500 touch-pan-y",
-          isTransitioning ? "opacity-50 scale-95" : "opacity-100 scale-100"
+        {/* Page Content */}
+        <div className={cn(
+          "p-4 lg:p-6 transition-opacity duration-300",
+          isTransitioning ? "opacity-50" : "opacity-100"
         )}>
-          <div className="animate-fade-in max-w-7xl mx-auto">
+          <div className="max-w-7xl mx-auto">
             {children}
           </div>
-          
-          {/* Mobile floating stitching indicator */}
-          <div className="fixed bottom-4 right-4 sm:hidden z-40">
-            {isTransitioning && (
-              <div className="luxury-card p-2 rounded-full">
-                <StitchingLoader size="sm" text="" />
-              </div>
-            )}
-          </div>
-        </main>
-      </div>
+        </div>
+      </main>
     </div>
   );
 }

@@ -8,17 +8,13 @@ import {
   CheckCircle,
   AlertCircle,
   Scissors,
-  Crown,
   Star,
-  Sparkles,
   User,
-  ShirtIcon as Shirt,
   PlusCircle
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import { StitchingLoader } from '@/components/animations/StitchingLoader';
-import { MeasuringTape } from '@/components/animations/MeasuringTape';
+import { SimpleLoader } from '@/components/animations/SimpleLoader';
 import { useAppStore } from '@/store';
 
 export function Dashboard() {
@@ -97,149 +93,97 @@ export function Dashboard() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'pending':
-        return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
+        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-500/20 dark:text-yellow-400';
       case 'in_progress':
-        return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
+        return 'bg-blue-100 text-blue-800 dark:bg-blue-500/20 dark:text-blue-400';
       case 'ready_for_trial':
-        return 'bg-purple-500/20 text-purple-400 border-purple-500/30';
+        return 'bg-purple-100 text-purple-800 dark:bg-purple-500/20 dark:text-purple-400';
       case 'alterations':
-        return 'bg-orange-500/20 text-orange-400 border-orange-500/30';
+        return 'bg-orange-100 text-orange-800 dark:bg-orange-500/20 dark:text-orange-400';
       case 'completed':
-        return 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30';
+        return 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-400';
       case 'delivered':
-        return 'bg-green-500/20 text-green-400 border-green-500/30';
+        return 'bg-green-100 text-green-800 dark:bg-green-500/20 dark:text-green-400';
       case 'cancelled':
-        return 'bg-red-500/20 text-red-400 border-red-500/30';
+        return 'bg-red-100 text-red-800 dark:bg-red-500/20 dark:text-red-400';
       default:
-        return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-500/20 dark:text-gray-400';
     }
   };
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-96">
-        <StitchingLoader size="lg" text="Loading Dashboard" />
+      <div className="flex items-center justify-center h-64">
+        <SimpleLoader size="lg" text="Loading Dashboard" />
       </div>
     );
   }
 
   return (
-    <div className="space-y-6 sm:space-y-8">
-      {/* Mobile-Optimized User Type Switcher */}
-      <div className="flex justify-center px-2">
-        <div className="luxury-card p-1.5 sm:p-2 rounded-xl sm:rounded-2xl border border-gold/30 w-full max-w-md sm:max-w-lg">
-          <div className="flex space-x-1 sm:space-x-2">
-            <Button
-              variant={userType === 'tailor' ? 'golden' : 'ghost'}
-              size="sm"
-              onClick={() => handleUserTypeSwitch('tailor')}
-              className="relative flex-1 text-xs sm:text-sm px-2 sm:px-4 py-2 sm:py-3"
-            >
-              <Scissors className="w-3 h-3 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
-              <span className="hidden xs:inline">Tailor Dashboard</span>
-              <span className="xs:hidden">Tailor</span>
-              {userType === 'tailor' && (
-                <Crown className="w-3 h-3 sm:w-4 sm:h-4 ml-1 sm:ml-2 animate-float" />
-              )}
-            </Button>
-            <Button
-              variant={userType === 'customer' ? 'golden' : 'ghost'}
-              size="sm"
-              onClick={() => handleUserTypeSwitch('customer')}
-              className="relative flex-1 text-xs sm:text-sm px-2 sm:px-4 py-2 sm:py-3"
-            >
-              <User className="w-3 h-3 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
-              <span className="hidden xs:inline">Customer Portal</span>
-              <span className="xs:hidden">Customer</span>
-              {userType === 'customer' && (
-                <Star className="w-3 h-3 sm:w-4 sm:h-4 ml-1 sm:ml-2 animate-float" />
-              )}
-            </Button>
-          </div>
+    <div className="space-y-6">
+      {/* User Type Switcher */}
+      <div className="flex justify-center">
+        <div className="bg-card rounded-lg p-1 border border-border inline-flex">
+          <Button
+            variant={userType === 'tailor' ? 'default' : 'ghost'}
+            size="sm"
+            onClick={() => handleUserTypeSwitch('tailor')}
+            className="flex-1"
+          >
+            <Scissors className="w-4 h-4 mr-2" />
+            Tailor
+          </Button>
+          <Button
+            variant={userType === 'customer' ? 'default' : 'ghost'}
+            size="sm"
+            onClick={() => handleUserTypeSwitch('customer')}
+            className="flex-1"
+          >
+            <User className="w-4 h-4 mr-2" />
+            Customer
+          </Button>
         </div>
       </div>
 
       {userType === 'tailor' ? (
         // Tailor Dashboard
         <>
-          {/* Mobile-Optimized Welcome Section */}
-          <div className="relative luxury-card rounded-xl sm:rounded-2xl p-4 sm:p-8 overflow-hidden fabric-texture">
-            <div className="absolute top-0 right-0 opacity-10">
-              <Scissors className="w-20 h-20 sm:w-32 sm:h-32 text-gold rotate-12" />
-            </div>
-            <div className="relative z-10">
-              <div className="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 mb-4">
-                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gold rounded-full flex items-center justify-center animate-float mx-auto sm:mx-0">
-                  <Crown className="w-6 h-6 sm:w-8 sm:h-8 text-navy" />
-                </div>
-                <div className="text-center sm:text-left">
-                  <h2 className="text-xl sm:text-3xl font-display font-bold text-gold mb-1 sm:mb-2">
-                    Master Tailor's Atelier
-                  </h2>
-                  <p className="text-silver text-sm sm:text-base">
-                    Crafting excellence, stitch by stitch
-                  </p>
-                </div>
+          {/* Welcome Section */}
+          <Card className="mb-6">
+            <CardHeader className="text-center">
+              <div className="w-16 h-16 bg-gold rounded-full flex items-center justify-center mx-auto mb-4">
+                <Scissors className="w-8 h-8 text-navy" />
               </div>
-              <div className="mt-4">
-                <MeasuringTape length={75} showMeasurement measurement="Excellence Level: 98%" />
-              </div>
-            </div>
-            
-            {/* Decorative stitching */}
-            <svg className="absolute bottom-0 left-0 right-0" height="6">
-              <line 
-                x1="0" 
-                y1="3" 
-                x2="100%" 
-                y2="3" 
-                className="stitching-line"
-                strokeWidth="2"
-              />
-            </svg>
-          </div>
+              <CardTitle className="text-2xl">Master Tailor's Dashboard</CardTitle>
+              <p className="text-muted-foreground">
+                Manage your tailoring business with precision
+              </p>
+            </CardHeader>
+          </Card>
 
-          {/* Mobile-First Stats Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          {/* Stats Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {tailorStats.map((stat, index) => {
               const Icon = stat.icon;
               return (
-                <Card 
-                  key={index} 
-                  className="group cursor-pointer"
-                  style={{ animationDelay: stat.delay }}
-                >
-                  <CardContent className="p-4 sm:p-6">
-                    <div className="flex items-center justify-between mb-3 sm:mb-4">
-                      <div className="flex-1 min-w-0">
-                        <p className="text-xs sm:text-sm font-medium text-silver/80 mb-1 truncate">
+                <Card key={index} className="hover:shadow-lg transition-shadow">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-muted-foreground mb-1">
                           {stat.title}
                         </p>
-                        <p className="text-lg sm:text-2xl font-display font-bold text-gold truncate">
+                        <p className="text-2xl font-bold text-foreground">
                           {stat.value}
                         </p>
-                        <div className="flex items-center mt-1 sm:mt-2">
-                          <TrendingUp className="w-3 h-3 text-emerald-400 mr-1 flex-shrink-0" />
-                          <span className="text-xs text-emerald-400">{stat.change}</span>
+                        <div className="flex items-center mt-2 text-sm">
+                          <TrendingUp className="w-4 h-4 text-green-500 mr-1" />
+                          <span className="text-green-500">{stat.change}</span>
+                          <span className="text-muted-foreground ml-1">vs last month</span>
                         </div>
                       </div>
-                      <div className={`p-2 sm:p-4 rounded-lg sm:rounded-xl bg-gradient-to-br ${stat.gradient} shadow-luxury group-hover:scale-110 transition-transform duration-300 flex-shrink-0`}>
-                        <Icon className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
-                      </div>
-                    </div>
-                    
-                    {/* Progress bar */}
-                    <div className="w-full bg-navy-light rounded-full h-1.5 sm:h-2 overflow-hidden">
-                      <div 
-                        className={`h-full bg-gradient-to-r ${stat.gradient} rounded-full animate-measure-tape`}
-                        style={{ width: '70%' }}
-                      ></div>
-                    </div>
-                    
-                    {/* Mobile stitching loader indicator */}
-                    <div className="mt-3 sm:hidden">
-                      <div className="flex justify-center">
-                        <div className="w-8 h-0.5 bg-gold/30 rounded-full animate-pulse"></div>
+                      <div className="p-3 bg-gold/10 rounded-lg">
+                        <Icon className="w-6 h-6 text-gold" />
                       </div>
                     </div>
                   </CardContent>
@@ -252,47 +196,51 @@ export function Dashboard() {
         // Customer Portal
         <div className="space-y-6">
           {/* Customer Welcome */}
-          <div className="luxury-card rounded-2xl p-8 text-center">
-            <Shirt className="w-16 h-16 text-gold mx-auto mb-4 animate-float" />
-            <h2 className="text-3xl font-display font-bold text-gold mb-2">
-              Welcome to Your Style Journey
-            </h2>
-            <p className="text-silver mb-6">
-              Track your orders, browse designs, and experience luxury tailoring
-            </p>
-            <div className="flex justify-center space-x-4">
-              <Button variant="golden" size="lg">
-                <Package className="w-5 h-5 mr-2" />
-                My Orders
-              </Button>
-              <Button variant="outline" size="lg">
-                <Sparkles className="w-5 h-5 mr-2" />
-                Browse Designs
-              </Button>
-            </div>
-          </div>
+          <Card>
+            <CardHeader className="text-center">
+              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <User className="w-8 h-8 text-primary" />
+              </div>
+              <CardTitle className="text-2xl">Welcome to Your Style Journey</CardTitle>
+              <p className="text-muted-foreground">
+                Track your orders and browse our exclusive designs
+              </p>
+            </CardHeader>
+            <CardContent className="text-center space-y-4">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button>
+                  <Package className="w-4 h-4 mr-2" />
+                  My Orders
+                </Button>
+                <Button variant="outline">
+                  <Star className="w-4 h-4 mr-2" />
+                  Browse Designs
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
 
-          {/* Customer Quick Stats */}
+          {/* Customer Stats */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Card>
               <CardContent className="p-6 text-center">
-                <Package className="w-12 h-12 text-gold mx-auto mb-3 animate-float" />
-                <h3 className="font-display font-semibold text-gold mb-1">Active Orders</h3>
-                <p className="text-2xl font-bold text-silver">3</p>
+                <Package className="w-12 h-12 text-primary mx-auto mb-3" />
+                <CardTitle className="text-lg mb-1">Active Orders</CardTitle>
+                <p className="text-2xl font-bold">3</p>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="p-6 text-center">
-                <CheckCircle className="w-12 h-12 text-emerald-400 mx-auto mb-3 animate-float" />
-                <h3 className="font-display font-semibold text-gold mb-1">Completed</h3>
-                <p className="text-2xl font-bold text-silver">12</p>
+                <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-3" />
+                <CardTitle className="text-lg mb-1">Completed</CardTitle>
+                <p className="text-2xl font-bold">12</p>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="p-6 text-center">
-                <Star className="w-12 h-12 text-gold mx-auto mb-3 animate-float" />
-                <h3 className="font-display font-semibold text-gold mb-1">Satisfaction</h3>
-                <p className="text-2xl font-bold text-silver">5.0★</p>
+                <Star className="w-12 h-12 text-yellow-500 mx-auto mb-3" />
+                <CardTitle className="text-lg mb-1">Satisfaction</CardTitle>
+                <p className="text-2xl font-bold">5.0★</p>
               </CardContent>
             </Card>
           </div>
@@ -300,63 +248,45 @@ export function Dashboard() {
       )}
 
       {/* Recent Orders & Quick Actions */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent Orders */}
-        <Card className="animate-slide-up">
+        <Card>
           <CardHeader>
             <CardTitle className="flex items-center">
-              <Package className="w-5 h-5 mr-3 animate-pulse" />
+              <Package className="w-5 h-5 mr-2" />
               Recent Orders
-              <div className="ml-auto">
-                <div className="w-3 h-3 bg-gold rounded-full animate-pulse"></div>
-              </div>
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div className="space-y-3">
               {recentOrders.length === 0 ? (
-                <div className="text-center py-12">
-                  <div className="relative">
-                    <AlertCircle className="w-16 h-16 text-gold/30 mx-auto mb-4 animate-float" />
-                    <Sparkles className="absolute top-0 right-1/2 transform translate-x-1/2 w-4 h-4 text-gold animate-pulse" />
-                  </div>
-                  <p className="text-silver">No orders yet. Start your tailoring journey!</p>
-                  <Button variant="luxury" className="mt-4" size="sm">
+                <div className="text-center py-8">
+                  <AlertCircle className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-50" />
+                  <p className="text-muted-foreground mb-4">No orders yet. Create your first order!</p>
+                  <Button size="sm">
                     <PlusCircle className="w-4 h-4 mr-2" />
                     Create First Order
                   </Button>
                 </div>
               ) : (
-                recentOrders.map((order, index) => (
+                recentOrders.map((order) => (
                   <div
                     key={order.id}
-                    className="luxury-card p-4 rounded-xl hover:scale-[1.02] transition-all duration-300 group"
-                    style={{ animationDelay: `${index * 0.1}s` }}
+                    className="flex items-center justify-between p-3 bg-accent/50 rounded-lg hover:bg-accent/70 transition-colors"
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-2 mb-2">
-                          <p className="font-display font-semibold text-gold">{order.customerName}</p>
-                          <Star className="w-4 h-4 text-gold animate-pulse" />
-                        </div>
-                        <p className="text-sm text-silver flex items-center">
-                          <Scissors className="w-3 h-3 mr-1" />
-                          {order.items.length} item(s) • ₹{order.totalAmount.toLocaleString()}
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <span
-                          className={`px-3 py-1 rounded-full text-xs font-semibold border ${getStatusColor(
-                            order.status
-                          )} animate-pulse`}
-                        >
-                          {order.status.replace('_', ' ').toUpperCase()}
-                        </span>
-                        <div className="mt-2">
-                          <MeasuringTape length={60} />
-                        </div>
-                      </div>
+                    <div>
+                      <p className="font-medium">{order.customerName}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {order.items.length} item(s) • ₹{order.totalAmount.toLocaleString()}
+                      </p>
                     </div>
+                    <span
+                      className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
+                        order.status
+                      )}`}
+                    >
+                      {order.status.replace('_', ' ').toUpperCase()}
+                    </span>
                   </div>
                 ))
               )}
@@ -364,84 +294,36 @@ export function Dashboard() {
           </CardContent>
         </Card>
 
-        {/* Master Actions */}
-        <Card className="animate-slide-up" style={{ animationDelay: '0.2s' }}>
+        {/* Quick Actions */}
+        <Card>
           <CardHeader>
-            <CardTitle className="flex items-center">
-              <Crown className="w-5 h-5 mr-3 text-gold animate-float" />
-              Master Actions
-            </CardTitle>
+            <CardTitle>Quick Actions</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              <Button
-                variant="luxury"
-                className="w-full justify-start p-6 h-auto group"
-              >
-                <div className="flex items-center w-full">
-                  <div className="p-3 rounded-xl bg-gold/20 mr-4 group-hover:bg-gold/30 transition-colors">
-                    <Package className="w-6 h-6 text-gold" />
-                  </div>
-                  <div className="flex-1 text-left">
-                    <p className="font-display font-semibold text-gold">Create New Order</p>
-                    <p className="text-sm text-silver/80">
-                      Start crafting a new masterpiece
-                    </p>
-                  </div>
-                  <Sparkles className="w-5 h-5 text-gold animate-pulse" />
+            <div className="space-y-3">
+              <Button className="w-full justify-start" variant="outline">
+                <Package className="w-4 h-4 mr-3" />
+                <div className="text-left">
+                  <div className="font-medium">Create New Order</div>
+                  <div className="text-xs text-muted-foreground">Add a new tailoring order</div>
                 </div>
               </Button>
               
-              <Button
-                variant="luxury"
-                className="w-full justify-start p-6 h-auto group"
-              >
-                <div className="flex items-center w-full">
-                  <div className="p-3 rounded-xl bg-emerald-500/20 mr-4 group-hover:bg-emerald-500/30 transition-colors">
-                    <Users className="w-6 h-6 text-emerald-400" />
-                  </div>
-                  <div className="flex-1 text-left">
-                    <p className="font-display font-semibold text-gold">Add Customer</p>
-                    <p className="text-sm text-silver/80">
-                      Welcome a new client to your atelier
-                    </p>
-                  </div>
-                  <Crown className="w-5 h-5 text-emerald-400 animate-float" />
+              <Button className="w-full justify-start" variant="outline">
+                <Users className="w-4 h-4 mr-3" />
+                <div className="text-left">
+                  <div className="font-medium">Add Customer</div>
+                  <div className="text-xs text-muted-foreground">Register a new customer</div>
                 </div>
               </Button>
               
-              <Button
-                variant="luxury"
-                className="w-full justify-start p-6 h-auto group"
-              >
-                <div className="flex items-center w-full">
-                  <div className="p-3 rounded-xl bg-purple-500/20 mr-4 group-hover:bg-purple-500/30 transition-colors">
-                    <TrendingUp className="w-6 h-6 text-purple-400" />
-                  </div>
-                  <div className="flex-1 text-left">
-                    <p className="font-display font-semibold text-gold">Business Analytics</p>
-                    <p className="text-sm text-silver/80">
-                      Master your craft with insights
-                    </p>
-                  </div>
-                  <Star className="w-5 h-5 text-purple-400 animate-pulse" />
+              <Button className="w-full justify-start" variant="outline">
+                <TrendingUp className="w-4 h-4 mr-3" />
+                <div className="text-left">
+                  <div className="font-medium">View Reports</div>
+                  <div className="text-xs text-muted-foreground">Business analytics</div>
                 </div>
               </Button>
-
-              {/* Premium Feature Teaser */}
-              <div className="luxury-card p-4 rounded-xl border-2 border-gold/30 bg-gradient-to-br from-gold/5 to-gold/10">
-                <div className="text-center">
-                  <Crown className="w-8 h-8 text-gold mx-auto mb-2 animate-float" />
-                  <h3 className="font-display font-bold text-gold mb-1">Premium Studio</h3>
-                  <p className="text-xs text-silver/80 mb-3">
-                    Unlock advanced pattern creation & AI styling
-                  </p>
-                  <Button variant="golden" size="sm">
-                    <Sparkles className="w-3 h-3 mr-1" />
-                    Upgrade Now
-                  </Button>
-                </div>
-              </div>
             </div>
           </CardContent>
         </Card>

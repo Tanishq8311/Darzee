@@ -215,10 +215,10 @@
   }
 }
 
-/* Stitching Animation */
+/* Simple Stitching Animation */
 @keyframes stitch {
   0%, 100% {
-    stroke-dashoffset: 100;
+    stroke-dashoffset: 20;
   }
   50% {
     stroke-dashoffset: 0;
@@ -227,10 +227,10 @@
 
 .stitching-line {
   stroke: hsl(var(--gold));
-  stroke-width: 2;
-  stroke-dasharray: 10, 5;
-  animation: stitch 2s ease-in-out infinite;
-  filter: drop-shadow(0 0 5px hsl(var(--gold) / 0.3));
+  stroke-width: 1;
+  stroke-dasharray: 8, 4;
+  animation: stitch 3s ease-in-out infinite;
+  opacity: 0.6;
 }
 
 /* Fabric Texture Animation */
